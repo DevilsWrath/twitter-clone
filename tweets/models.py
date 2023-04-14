@@ -8,6 +8,9 @@ class Tweet(models.Model):
     text = models.CharField(max_length=280, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-id']
+
     def serialize(self):
         return {
             "id": self.id,
