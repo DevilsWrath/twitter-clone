@@ -3,6 +3,14 @@ from django.contrib.auth.models import User
 
 
 class Tweet(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.CharField(max_length=280)
+    id = models.AutoField(primary_key=True)
+    image = models.FileField(upload_to='images/', blank=True, null=True)
+    text = models.CharField(max_length=280, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "content": self.text,
+            "likes": 0
+        }
