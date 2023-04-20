@@ -25,8 +25,10 @@ SECRET_KEY = "django-insecure-l&g0i#!8^_1%n)+8u784e3erj#d$43b7x01u@&g=a!l!apslj-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SESSION_COOKIE_SECURE = False
 ALLOWED_HOSTS = ['127.0.0.1']
-
+LOGIN_URL = "/login"
+MAX_TWEET_LENGTH = 240
 
 # Application definition
 
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'rest_framework',
     "tweets",
 ]
 
@@ -77,8 +80,12 @@ WSGI_APPLICATION = "djangoProject.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        'NAME': 'usersdb',
+        'USER': 'savas',
+        'PASSWORD': 'savas99',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -123,3 +130,13 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        'rest_framework.authentication.SessionAuthentication'
+    ],
+    "DEFAULT_RENDERER_CLASSES": [
+        'rest_framework.renderers.JSONRenderer',
+        # 'rest_framework.renderers.BrowsableAPIRenderer'
+    ]
+}

@@ -73,6 +73,12 @@ function handleTweetCreateFormDidSubmit(event){
             }
         } else if (xhr.status === 500){
             alert("There was a server error. Please try later.")
+        } else if (xhr.status === 401){
+            alert("You must be logged in to tweet")
+            window.location.href = "/login"
+        }else if (xhr.status === 403){
+            alert("You must be logged in to tweet")
+            window.location.href = "/login"
         }
     }
     xhr.onerror = function (){
@@ -83,7 +89,6 @@ function handleTweetCreateFormDidSubmit(event){
 
 const tweetCreateFormEl = document.getElementById("tweet_create_form")
 tweetCreateFormEl.addEventListener("submit", handleTweetCreateFormDidSubmit)
-
 const tweetsContainerElement = document.getElementById("tweets")
 
 function loadTweets(tweetsElement){
@@ -92,26 +97,21 @@ function loadTweets(tweetsElement){
     const url = "/tweets"
     const responseType = "json"
     xhr.responseType = responseType
-xhr.open(method, url)
-xhr.onload = function (){
-    const serverResponse = xhr.response
-    var listedItems = xhr.response.response
-    var finalTweetStr =""
-    var i;
-
-    for(i=0;i<listedItems.length; i++){
-        console.log(i)
-        console.log(listedItems[i])
-        var tweetObj = listedItems[i]
-        var currentItem = formatTweetElement(tweetObj)
-        finalTweetStr += currentItem
+    xhr.open(method, url)
+    xhr.onload = function (){
+        const serverResponse = xhr.response
+        const listedItems = serverResponse
+        let finalTweetStr = ""
+        for(let i = 0; i < listedItems.length; i++){
+            const tweetObj = listedItems[i]
+            const currentItem = formatTweetElement(tweetObj)
+            finalTweetStr += currentItem
+        }
+        tweetsElement.innerHTML = finalTweetStr
     }
-    tweetsElement.innerHTML = finalTweetStr
-}
-xhr.send()
+    xhr.send()
 }
 loadTweets(tweetsContainerElement)
-
 
 function handleDidLike (tweet_id, currentCount){
     console.log(tweet_id, currentCount)
@@ -124,7 +124,7 @@ function likeBtn(tweet){
 
 
 function formatTweetElement(tweet){
-    return "<div class='col-12 col-md-10 mx-auto border border-rounded py-3 mb-4 tweet' id='tweet-" + tweet.id + "'<p>" + tweet.content +"</p><div>" + likeBtn(tweet) + "</div></div>"
+    return "<div class='col-12 col-md-10 mx-auto border border-rounded py-3 mb-4 tweet' id='tweet-" + tweet.id + "'<p>" + tweet.text +"</p><div>" + likeBtn(tweet) + "</div></div>"
 }
 
 
